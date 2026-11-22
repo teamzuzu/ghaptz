@@ -199,6 +199,10 @@ kubectl rollout restart deployment/ghaptz -n ghaptz
 kubectl rollout status deployment/ghaptz -n ghaptz
 ```
 
+The container includes `/bin/sh` for troubleshooting. To open a shell in a
+running pod, use `kubectl exec -it deployment/ghaptz -n ghaptz -- /bin/sh`.
+The root filesystem remains read-only; use `/data` for writable files.
+
 ### Network access
 
 Allow outbound HTTPS from ghaptz to `api.github.com`, `github.com`, and GitHub
