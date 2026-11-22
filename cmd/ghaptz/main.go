@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/teamzuzu/lazyrepo/internal/config"
-	"github.com/teamzuzu/lazyrepo/internal/github"
-	"github.com/teamzuzu/lazyrepo/internal/index"
-	"github.com/teamzuzu/lazyrepo/internal/poller"
-	"github.com/teamzuzu/lazyrepo/internal/server"
+	"github.com/teamzuzu/ghaptz/internal/config"
+	"github.com/teamzuzu/ghaptz/internal/github"
+	"github.com/teamzuzu/ghaptz/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/poller"
+	"github.com/teamzuzu/ghaptz/internal/server"
 )
 
 func main() {
@@ -48,7 +48,7 @@ func main() {
 		httpServer.Shutdown(shutdownCtx)
 	}()
 
-	log.Printf("lazyrepo listening on %s", cfg.Listen)
+	log.Printf("ghaptz listening on %s", cfg.Listen)
 	if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("http server: %v", err)
 	}

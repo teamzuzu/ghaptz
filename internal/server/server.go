@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/teamzuzu/lazyrepo/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/index"
 )
 
 // HealthChecker reports overall poller health for the /healthz endpoint.

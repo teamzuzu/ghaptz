@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: lazyrepo-data
+  name: ghaptz-data
 spec:
   accessModes:
     - ReadWriteOnce

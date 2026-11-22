@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// Asset is a single GitHub release asset relevant to lazyrepo.
+// Asset is a single GitHub release asset relevant to ghaptz.
 type Asset struct {
 	Name        string
 	Size        int64
@@ -95,7 +95,7 @@ func (c *Client) ListReleases(ctx context.Context, owner, repo string) ([]Releas
 			return nil, err
 		}
 		req.Header.Set("Accept", "application/vnd.github+json")
-		req.Header.Set("User-Agent", "lazyrepo")
+		req.Header.Set("User-Agent", "ghaptz")
 
 		cached := c.pages[u]
 		if cached.etag != "" {

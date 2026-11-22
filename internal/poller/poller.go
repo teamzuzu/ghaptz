@@ -9,13 +9,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/teamzuzu/lazyrepo/internal/config"
-	"github.com/teamzuzu/lazyrepo/internal/debpkg"
-	"github.com/teamzuzu/lazyrepo/internal/github"
-	"github.com/teamzuzu/lazyrepo/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/config"
+	"github.com/teamzuzu/ghaptz/internal/debpkg"
+	"github.com/teamzuzu/ghaptz/internal/github"
+	"github.com/teamzuzu/ghaptz/internal/index"
 )
 
-// maxAssetSize is the largest release asset lazyrepo will download. GitHub
+// maxAssetSize is the largest release asset ghaptz will download. GitHub
 // reports asset size in the release API response, so oversized assets can
 // be skipped before any download happens; the download function also
 // enforces this as a hard cap in case a server misreports its size.
@@ -106,7 +106,7 @@ func (p *Poller) pollRepo(ctx context.Context, rc *config.RepoConfig) error {
 				continue
 			}
 			// Re-parse rather than skip if InstalledSize is still zero: a
-			// cache populated by an older lazyrepo version (before
+			// cache populated by an older ghaptz version (before
 			// InstalledSize was tracked) would otherwise never pick up the
 			// field apt needs to recognize an already-installed version.
 			key := assetKey(asset)

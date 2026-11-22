@@ -3,7 +3,7 @@ package debpkg
 import (
 	"testing"
 
-	"github.com/teamzuzu/lazyrepo/internal/testutil"
+	"github.com/teamzuzu/ghaptz/internal/testutil"
 )
 
 func TestParseControl_Basic(t *testing.T) {

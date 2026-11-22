@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/teamzuzu/lazyrepo/internal/config"
-	"github.com/teamzuzu/lazyrepo/internal/github"
-	"github.com/teamzuzu/lazyrepo/internal/index"
-	"github.com/teamzuzu/lazyrepo/internal/poller"
-	"github.com/teamzuzu/lazyrepo/internal/server"
-	"github.com/teamzuzu/lazyrepo/internal/testutil"
+	"github.com/teamzuzu/ghaptz/internal/config"
+	"github.com/teamzuzu/ghaptz/internal/github"
+	"github.com/teamzuzu/ghaptz/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/poller"
+	"github.com/teamzuzu/ghaptz/internal/server"
+	"github.com/teamzuzu/ghaptz/internal/testutil"
 )
 
 func TestEndToEnd_PackagesAndRedirect(t *testing.T) {

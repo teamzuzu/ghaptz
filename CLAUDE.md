@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-lazyrepo turns one or more GitHub repos that publish `.deb` files as release assets (e.g.
+ghaptz turns one or more GitHub repos that publish `.deb` files as release assets (e.g.
 `rcarmo/pve-microvm`) into a normal apt repository, so `apt update`/`apt upgrade` picks up new
 releases automatically. It never mirrors `.deb` bytes: it serves only repository metadata
 (`Packages`/`Packages.gz`/`Release`) and 302-redirects package downloads straight to GitHub's
-`browser_download_url`. Ships as a Docker image published to `ghcr.io/teamzuzu/lazyrepo`.
+`browser_download_url`. Ships as a Docker image published to `ghcr.io/teamzuzu/ghaptz`.
 
 ## Commands
 
@@ -20,8 +20,8 @@ go test ./... -race                     # with the race detector (run before pus
 go test ./internal/poller/... -v        # single package, verbose
 go test ./internal/poller/... -run TestPollOnce_ReparsesEntryMissingInstalledSize -v  # single test
 
-go run ./cmd/lazyrepo -config config.yaml   # run locally (copy config.example.yaml first)
-docker build -t lazyrepo:test .             # build the image locally
+go run ./cmd/ghaptz -config config.yaml   # run locally (copy config.example.yaml first)
+docker build -t ghaptz:test .             # build the image locally
 docker compose up -d                        # run via the published ghcr.io image
 ```
 
@@ -29,7 +29,7 @@ No linter/formatter config beyond `gofmt`/`go vet` - there is no Makefile.
 
 ## Architecture
 
-Six single-purpose packages under `internal/`, wired together by `cmd/lazyrepo/main.go`:
+Six single-purpose packages under `internal/`, wired together by `cmd/ghaptz/main.go`:
 
 ```
 config  → poller ← github
@@ -43,7 +43,7 @@ config  → poller ← github
 - **`internal/index`**: the in-memory + disk-cached package list (`Index`, `PackageEntry`). Renders the actual apt-facing files: `RenderPackages`/`RenderPackagesGz`/`RenderRelease`. `SaveCache`/`LoadCache` persist to JSON via atomic temp-file-then-rename.
 - **`internal/poller`**: the only package that ties the others together. `PollOnce` walks every configured repo's releases (skipping draft/prerelease), downloads any new/incomplete `.deb` asset just long enough to run it through `debpkg.ParseControl`, and adds the result to the `Index`. A failure on one repo or asset is logged and skipped, never fatal to the rest of the poll.
 - **`internal/server`**: HTTP layer (`/Packages`, `/Packages.gz`, `/Release`, `/healthz`, and a catch-all that 302-redirects `<filename>.deb` requests). Depends only on `internal/index` plus its own tiny `HealthChecker` interface — `*poller.Poller` satisfies it structurally, avoiding an import cycle.
-- **`internal/testutil`**: `BuildAr`/`BuildDeb` construct synthetic `.deb`-shaped byte blobs in tests (real `ar`/`tar`/`gzip`, no vendored binary fixture). Shared by `debpkg`, `poller`, and `cmd/lazyrepo`'s tests.
+- **`internal/testutil`**: `BuildAr`/`BuildDeb` construct synthetic `.deb`-shaped byte blobs in tests (real `ar`/`tar`/`gzip`, no vendored binary fixture). Shared by `debpkg`, `poller`, and `cmd/ghaptz`'s tests.
 
 Tests throughout use real `httptest.Server`s and real archive/compression bytes rather than mocks — see any `*_test.go` for the pattern.
 

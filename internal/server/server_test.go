@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/teamzuzu/lazyrepo/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/index"
 )
 
 type fakeHealth struct{ healthy bool }

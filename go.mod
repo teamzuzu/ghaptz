@@ -1,4 +1,4 @@
-module github.com/teamzuzu/lazyrepo
+module github.com/teamzuzu/ghaptz
 
 go 1.22
 

@@ -22,7 +22,7 @@ const maxControlTarSize = 64 * 1024 * 1024 // 64 MB
 // inside control.tar. A real Debian control file is at most a few KB.
 const maxControlFileSize = 1 * 1024 * 1024 // 1 MB
 
-// ControlFields is the subset of a .deb's control file that lazyrepo needs
+// ControlFields is the subset of a .deb's control file that ghaptz needs
 // to render an apt Packages stanza.
 type ControlFields struct {
 	Package       string

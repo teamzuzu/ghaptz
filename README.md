@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="lazy.png" width="300" alt="lazyrepo logo">
+  <img src="ghaptz.png" width="300" alt="ghaptz logo">
 </p>
 
-# lazyrepo
+# ghaptz
 
 **GitHub release assets, available through apt.**
 
-lazyrepo turns GitHub repositories that publish `.deb` files into an apt repository.
+ghaptz turns GitHub repositories that publish `.deb` files into an apt repository.
 Run one small service, point it at your repositories, and let clients install and
 upgrade packages with their usual apt commands.
 
@@ -20,7 +20,7 @@ upgrade packages with their usual apt commands.
 ```mermaid
 flowchart LR
     GH["GitHub releases<br/>.deb assets"]
-    LR["lazyrepo"]
+    LR["ghaptz"]
     Cache[("Persistent<br/>metadata cache")]
     APT["apt client"]
 
@@ -31,7 +31,7 @@ flowchart LR
     APT -->|"5. Download .deb directly"| GH
 ```
 
-lazyrepo polls on startup and then at the configured interval. It skips draft and
+ghaptz polls on startup and then at the configured interval. It skips draft and
 prerelease releases, downloads new matching assets to read their Debian control
 metadata, and saves the index. Package bytes are read during indexing but are
 **never retained or served as a mirror**. Client package requests receive an HTTP
@@ -52,8 +52,8 @@ of repository responses.
 Requires Docker with the Compose plugin.
 
 ```bash
-git clone https://github.com/teamzuzu/lazyrepo.git
-cd lazyrepo
+git clone https://github.com/teamzuzu/ghaptz.git
+cd ghaptz
 cp config.example.yaml config.yaml
 ```
 
@@ -61,7 +61,7 @@ Edit `config.yaml` to list the repositories you want to track, then start:
 
 ```bash
 docker compose up -d
-docker compose logs -f lazyrepo
+docker compose logs -f ghaptz
 ```
 
 The supplied Compose file publishes port **8080** and stores the index in a named
@@ -132,13 +132,13 @@ this might be `http://<server>:8080/`; for an HTTPS Ingress, use your public dom
 
 ```bash
 echo 'deb [trusted=yes] https://apt.example.com/ ./' \
-  | sudo tee /etc/apt/sources.list.d/lazyrepo.list
+  | sudo tee /etc/apt/sources.list.d/ghaptz.list
 sudo apt update
 sudo apt install <package-name>
 ```
 
 Future versions are available through `sudo apt update` and `sudo apt upgrade`
-after lazyrepo's next successful poll.
+after ghaptz's next successful poll.
 
 **Repository metadata is unsigned.** `[trusted=yes]` opts this source out of apt's
 repository signature verification. Use repositories and a service operator you
@@ -171,10 +171,10 @@ values into Ingress host rules.
 ### Apply and verify
 
 ```bash
-kubectl create namespace lazyrepo
-kubectl apply -k deploy/kubernetes -n lazyrepo
-kubectl rollout status deployment/lazyrepo -n lazyrepo
-kubectl logs -f deployment/lazyrepo -n lazyrepo
+kubectl create namespace ghaptz
+kubectl apply -k deploy/kubernetes -n ghaptz
+kubectl rollout status deployment/ghaptz -n ghaptz
+kubectl logs -f deployment/ghaptz -n ghaptz
 ```
 
 Create the namespace only if it does not already exist. After the initial poll,
@@ -194,14 +194,14 @@ writers; expect a brief interruption during updates.
 After changing the ConfigMap, apply it and restart to reload configuration:
 
 ```bash
-kubectl apply -k deploy/kubernetes -n lazyrepo
-kubectl rollout restart deployment/lazyrepo -n lazyrepo
-kubectl rollout status deployment/lazyrepo -n lazyrepo
+kubectl apply -k deploy/kubernetes -n ghaptz
+kubectl rollout restart deployment/ghaptz -n ghaptz
+kubectl rollout status deployment/ghaptz -n ghaptz
 ```
 
 ### Network access
 
-Allow outbound HTTPS from lazyrepo to `api.github.com`, `github.com`, and GitHub
+Allow outbound HTTPS from ghaptz to `api.github.com`, `github.com`, and GitHub
 release asset hosts, including `release-assets.githubusercontent.com`. Clients
 need access to your Ingress and the redirected GitHub download destinations.
 The Kubernetes nodes also need access to `ghcr.io` to pull the container image.
@@ -213,10 +213,10 @@ on supported platforms.
 
 ```bash
 go mod download
-go build -o lazyrepo ./cmd/lazyrepo
+go build -o ghaptz ./cmd/ghaptz
 cp config.example.yaml config.yaml
 # Edit config.yaml: use a writable cache_file, such as ./index.json.
-./lazyrepo -config config.yaml
+./ghaptz -config config.yaml
 ```
 
 Development checks:

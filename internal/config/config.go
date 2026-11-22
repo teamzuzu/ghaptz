@@ -40,7 +40,7 @@ func (r RepoConfig) Matches(name string) bool {
 	return r.filterRe.MatchString(name)
 }
 
-// Config is the top-level lazyrepo configuration.
+// Config is the top-level ghaptz configuration.
 type Config struct {
 	Listen       string
 	PollInterval time.Duration
@@ -55,7 +55,7 @@ type rawConfig struct {
 	Repos        []RepoConfig `yaml:"repos"`
 }
 
-// Load reads and validates a lazyrepo config file at path.
+// Load reads and validates a ghaptz config file at path.
 func Load(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {

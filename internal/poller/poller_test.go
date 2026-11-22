@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/teamzuzu/lazyrepo/internal/config"
-	"github.com/teamzuzu/lazyrepo/internal/github"
-	"github.com/teamzuzu/lazyrepo/internal/index"
-	"github.com/teamzuzu/lazyrepo/internal/testutil"
+	"github.com/teamzuzu/ghaptz/internal/config"
+	"github.com/teamzuzu/ghaptz/internal/github"
+	"github.com/teamzuzu/ghaptz/internal/index"
+	"github.com/teamzuzu/ghaptz/internal/testutil"
 )
 
 func TestPollOnce_IndexesNewDebAndPersistsCache(t *testing.T) {
@@ -125,7 +125,7 @@ func TestPollOnce_ReparsesEntryMissingInstalledSize(t *testing.T) {
 
 	gh := github.NewClientWithBaseURL(ts.URL)
 	idx := index.New()
-	// Simulate a cache populated by a pre-InstalledSize lazyrepo version:
+	// Simulate a cache populated by a pre-InstalledSize ghaptz version:
 	// same dedup key, but InstalledSize never got recorded.
 	idx.Add(index.PackageEntry{
 		Key:         "sha256:testdigest",

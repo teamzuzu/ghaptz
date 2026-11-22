@@ -1,12 +1,12 @@
 services:
-  lazyrepo:
-    image: ghcr.io/teamzuzu/lazyrepo:latest
+  ghaptz:
+    image: ghcr.io/teamzuzu/ghaptz:latest
     ports:
       - "8080:8080"
     volumes:
       - ./config.yaml:/data/config.yaml:ro
-      - lazyrepo-data:/data
+      - ghaptz-data:/data
     restart: unless-stopped
 
 volumes:
-  lazyrepo-data:
+  ghaptz-data:

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: lazyrepo
+  name: ghaptz
 spec:
   # Set ingressClassName to your cluster's controller if it has no default.
   # ingressClassName: nginx
@@ -13,11 +13,11 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: lazyrepo
+                name: ghaptz
                 port:
                   name: http
   # Enable TLS after creating a certificate Secret in the same namespace.
   # tls:
   #   - hosts:
   #       - apt.example.com
-  #     secretName: lazyrepo-tls
+  #     secretName: ghaptz-tls

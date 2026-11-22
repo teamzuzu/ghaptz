@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// PackageEntry is one Debian package known to lazyrepo, derived from a
+// PackageEntry is one Debian package known to ghaptz, derived from a
 // single GitHub release asset.
 type PackageEntry struct {
 	Key           string // dedup identity, e.g. "sha256:<digest>"
@@ -188,11 +188,11 @@ func (idx *Index) RenderSnapshot() (packages, packagesGz, release []byte, err er
 
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "Acquire-By-Hash: yes\n")
-	fmt.Fprintf(&buf, "Origin: lazyrepo\n")
-	fmt.Fprintf(&buf, "Label: lazyrepo\n")
+	fmt.Fprintf(&buf, "Origin: ghaptz\n")
+	fmt.Fprintf(&buf, "Label: ghaptz\n")
 	fmt.Fprintf(&buf, "Suite: ./\n")
 	fmt.Fprintf(&buf, "Date: %s\n", time.Now().UTC().Format(time.RFC1123))
-	fmt.Fprintf(&buf, "Description: lazyrepo apt repository\n")
+	fmt.Fprintf(&buf, "Description: ghaptz apt repository\n")
 	fmt.Fprintf(&buf, "MD5Sum:\n")
 	fmt.Fprintf(&buf, " %x %d Packages\n", md5Sum, len(packages))
 	fmt.Fprintf(&buf, " %x %d Packages.gz\n", md5SumGz, len(packagesGz))
