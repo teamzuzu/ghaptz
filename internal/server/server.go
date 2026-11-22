@@ -3,9 +3,11 @@ package server
 import (
 	"crypto/sha256"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/teamzuzu/ghaptz/internal/index"
 )
@@ -40,7 +42,39 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("/healthz", s.handleHealthz)
 	mux.HandleFunc("/by-hash/SHA256/", s.handleByHash)
 	mux.HandleFunc("/", s.handleDebRedirect)
-	return mux
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		logged := &responseLogger{ResponseWriter: w, status: http.StatusOK}
+		defer func() {
+			log.Printf("http request: method=%q path=%q status=%d bytes=%d duration=%s", r.Method, r.URL.Path, logged.status, logged.bytes, time.Since(start))
+		}()
+		mux.ServeHTTP(logged, r)
+	})
+}
+
+type responseLogger struct {
+	http.ResponseWriter
+	status      int
+	bytes       int
+	wroteHeader bool
+}
+
+func (w *responseLogger) WriteHeader(status int) {
+	if w.wroteHeader {
+		return
+	}
+	w.wroteHeader = true
+	w.status = status
+	w.ResponseWriter.WriteHeader(status)
+}
+
+func (w *responseLogger) Write(p []byte) (int, error) {
+	if !w.wroteHeader {
+		w.WriteHeader(http.StatusOK)
+	}
+	n, err := w.ResponseWriter.Write(p)
+	w.bytes += n
+	return n, err
 }
 
 func (s *Server) handlePackages(w http.ResponseWriter, r *http.Request) {

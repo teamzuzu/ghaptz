@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -17,6 +18,7 @@ import (
 )
 
 func main() {
+	log.SetOutput(os.Stdout)
 	configPath := flag.String("config", "config.yaml", "path to config.yaml")
 	flag.Parse()
 

@@ -231,6 +231,14 @@ The existing tests use local HTTP servers and synthetic Debian packages to cover
 GitHub polling, package parsing, index rendering, and download redirects without
 requiring live GitHub access.
 
+## Logging
+
+ghaptz writes logs to stdout, including poll start and completion, repository
+release counts, asset downloads and indexing, errors, and HTTP requests with
+status, response size, and duration. HTTP query strings and request bodies are
+not logged. Health checks are logged like other requests. There is currently no
+log-level setting.
+
 ## Troubleshooting
 
 | Symptom | What to check |

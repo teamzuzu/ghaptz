@@ -73,8 +73,11 @@ func (p *Poller) Run(ctx context.Context) {
 // if any repo (or the cache save) failed, but the index and cache file
 // still reflect whatever succeeded.
 func (p *Poller) PollOnce(ctx context.Context) error {
+	start := time.Now()
+	log.Printf("poll started: repos=%d", len(p.cfg.Repos))
 	var firstErr error
 	for i := range p.cfg.Repos {
+		log.Printf("polling repo=%q", p.cfg.Repos[i].Repo)
 		if err := p.pollRepo(ctx, &p.cfg.Repos[i]); err != nil {
 			log.Printf("polling %s: %v", p.cfg.Repos[i].Repo, err)
 			if firstErr == nil {
@@ -91,11 +94,13 @@ func (p *Poller) PollOnce(ctx context.Context) error {
 	}
 
 	p.healthy.Store(firstErr == nil)
+	log.Printf("poll completed: success=%t duration=%s", firstErr == nil, time.Since(start))
 	return firstErr
 }
 
 func (p *Poller) pollRepo(ctx context.Context, rc *config.RepoConfig) error {
 	releases, listingErr := p.gh.ListReleases(ctx, rc.Owner(), rc.Name())
+	log.Printf("releases fetched: repo=%q count=%d", rc.Repo, len(releases))
 
 	for _, rel := range releases {
 		if rel.Draft || rel.Prerelease {
@@ -118,6 +123,7 @@ func (p *Poller) pollRepo(ctx context.Context, rc *config.RepoConfig) error {
 				continue
 			}
 
+			log.Printf("downloading asset: repo=%q release=%q asset=%q size=%d", rc.Repo, rel.TagName, asset.Name, asset.Size)
 			data, err := p.download(ctx, asset.DownloadURL)
 			if err != nil {
 				log.Printf("downloading %s: %v", asset.Name, err)
@@ -129,6 +135,7 @@ func (p *Poller) pollRepo(ctx context.Context, rc *config.RepoConfig) error {
 				continue
 			}
 
+			log.Printf("indexed asset: repo=%q asset=%q package=%q version=%q architecture=%q", rc.Repo, asset.Name, fields.Package, fields.Version, fields.Architecture)
 			p.idx.Add(index.PackageEntry{
 				Key:           key,
 				Package:       fields.Package,
